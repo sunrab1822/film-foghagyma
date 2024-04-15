@@ -4,19 +4,18 @@ const Film = require("../models/Film");
 
 const router = express.Router();
 
-// router.post("/", async (req, res) => {
-//   const data = new nSideModel({
-//     name: req.body.name,
-//     foreignKey: req.body.foreignKey,
-//   });
+router.post("/filmek", async (req, res) => {
+  const data = new Film(
+    req.body
+  );
 
-//   try {
-//     const dataToSave = await data.save();
-//     res.status(201).json({ _id: dataToSave._id });
-//   } catch (error) {
-//     res.status(400).json({ message: error.message });
-//   }
-// });
+  try {
+    const dataToSave = await data.save();
+    res.status(201).json({ "_id": dataToSave._id });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
 
 // router.get("/filmek", async (req, res) => {
 //   try {
@@ -30,6 +29,11 @@ const router = express.Router();
 router.get("/filmek/:studio", async (req, res) => {
   try {
     const studio = await Forgalmazo.findOne({"Forgalmazo":req.params.studio})
+    if (studio.length !== 0) {
+      res
+        .status(404)
+        .json({ message: "Ebben a Studioban nem találtam filmet." });
+    }
     console.log(studio)
     const filmek = await Film
       .find({ Studio_id: studio._id })
@@ -43,7 +47,7 @@ router.get("/filmek/:studio", async (req, res) => {
         .json({ message: "Ebben a Studioban nem találtam filmet." });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(400).json({ message: error.message });
   }
 });
 
@@ -67,15 +71,15 @@ router.get("/filmek/:studio", async (req, res) => {
 //   }
 // });
 
-// //Delete by ID Method
-// router.delete("/:id", async (req, res) => {
-//   try {
-//     const id = req.params.id;
-//     const data = await Model.findByIdAndDelete(id);
-//     res.send(`Document with ${data.name} has been deleted..`);
-//   } catch (error) {
-//     res.status(400).json({ message: error.message });
-//   }
-// });
+//Delete by ID Method
+router.delete("filmek/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const data = await Film.findByIdAndDelete(id);
+    res.send(`Film with ${data.name} has been deleted..`);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
 
 module.exports = router;
