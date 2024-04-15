@@ -31,12 +31,12 @@ router.get("/filmek/:studio", async (req, res) => {
   try {
     const studio = await Forgalmazo.findOne({"Forgalmazo":req.params.studio})
     console.log(studio)
-    const data = await Film
+    const filmek = await Film
       .find({ Studio_id: studio._id })
       .populate("Studio_id", "-_id");
-      console.log(data)
-    if (data.length !== 0) {
-      res.json(data);
+      console.log(filmek)
+    if (filmek.length !== 0) {
+      res.json(filmek);
     } else {
       res
         .status(404)
